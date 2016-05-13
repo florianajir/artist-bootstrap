@@ -1,13 +1,21 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8" />
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
-        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
-    </body>
+<head>
+  <meta charset="UTF-8"/>
+  <title>{% block title %}Welcome!{% endblock %}</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  {% block stylesheets %}{% endblock %}
+  {#<link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />#}
+</head>
+<body>
+{% for flash_message in app.session.flashBag.get('notice') %}
+  <div class="alert alert-info flash-notice" role="alert">
+    {{ flash_message }}
+  </div>
+{% endfor %}
+{% block body %}{% endblock %}
+{% block javascripts %}{% endblock %}
+</body>
 </html>

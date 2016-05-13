@@ -16,11 +16,17 @@ services:
         scope: request
         arguments: 
             - '@ajir_contact.form'
+            - '@ajir_contact.service.mailer'
+
+    ajir_contact.service.mailer:
+        class: Ajir\ContactBundle\Service\Mailer
+        arguments:
             - '@mailer'
 
     ajir_contact.controller:
         class: Ajir\ContactBundle\Controller\ContactController
         arguments:
-            - '@ajir_contact.form.handler'
+            - '@templating'
             - '@session'
             - '@translator'
+            - '@ajir_contact.form.handler'

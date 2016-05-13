@@ -12,7 +12,7 @@ namespace Ajir\ContactBundle\Form;
 
 use Ajir\ContactBundle\Exception\EmailFailureException;
 use Ajir\ContactBundle\Exception\EmailNotSentException;
-use \Swift_Mailer as Mailer;
+use Ajir\ContactBundle\Service\Mailer;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -53,14 +53,6 @@ class ContactHandler
     }
 
     /**
-     * @param string $recipient
-     */
-    public function setConfig($recipient)
-    {
-        $this->recipient = $recipient;
-    }
-
-    /**
      * @return Form
      */
     public function getForm()
@@ -71,6 +63,8 @@ class ContactHandler
     /**
      * Process form
      *
+     * @param Request $request
+     *
      * @return bool
      *
      * @throws EmailFailureException
@@ -79,7 +73,7 @@ class ContactHandler
     public function process(Request $request)
     {
         if ('POST' === $request->getMethod()) {
-            $this->form->submit($request);
+            $this->form->handleRequest($request);
             if ($this->form->isValid()) {
                 $contact = $this->form->getData();
                 $this->onSuccess($contact);
@@ -101,22 +95,6 @@ class ContactHandler
      */
     private function onSuccess(Contact $contact)
     {
-        $message = \Swift_Message::newInstance(
-            $contact->getSubject(),
-            $contact->getContent(),
-            'text/html'
-        );
-        $message
-            ->setFrom($contact->getEmail())
-            ->setTo($this->recipient)
-            ->setBody($contact->getContent());
-        $failures = array();
-        $sent = $this->mailer->send($message, $failures);
-        if ($sent === 0) {
-            throw new EmailNotSentException();
-        }
-        if (count($failures) > 0) {
-            throw EmailFailureException::createFromArray($failures);
-        }
+        $this->mailer->send($contact->getSubject(), $contact->getContent(), $contact->getEmail());
     }
 }

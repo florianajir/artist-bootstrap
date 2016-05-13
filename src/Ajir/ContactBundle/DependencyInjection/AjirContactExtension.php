@@ -21,7 +21,7 @@ class AjirContactExtension extends Extension
         $loader->load('services.yml');
 
         // Once the services definition are read, get your service and add a method call to setConfig()
-        $formHandlerDefintion = $container->getDefinition('ajir_contact.form.handler');
-        $formHandlerDefintion->addMethodCall('setConfig', array($processedConfig['contact_email']));
+        $mailerDefintion = $container->getDefinition('ajir_contact.service.mailer');
+        $mailerDefintion ->addMethodCall('setConfig', array($processedConfig['contact_email']));
     }
 }

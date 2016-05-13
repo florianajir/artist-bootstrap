@@ -13,6 +13,7 @@ namespace Ajir\ContactBundle\Controller;
 use Ajir\ContactBundle\Exception\EmailSubmitException;
 use Ajir\ContactBundle\Form\ContactHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -23,9 +24,9 @@ use Symfony\Component\Translation\TranslatorInterface;
 class ContactController extends Controller
 {
     /**
-     * @var ContactHandler
+     * @var EngineInterface
      */
-    private $handler;
+    private $templating;
 
     /**
      * @var Session
@@ -38,19 +39,34 @@ class ContactController extends Controller
     private $translator;
 
     /**
-     * @param ContactHandler $handler
+     * @var ContactHandler
+     */
+    private $handler;
+
+    /**
+     * @param EngineInterface $templating
      * @param Session $session
      * @param TranslatorInterface $translator
+     * @param ContactHandler $handler
      */
-    public function __construct(ContactHandler $handler, Session $session, TranslatorInterface $translator)
-    {
-        $this->handler = $handler;
+    public function __construct(
+        EngineInterface $templating,
+        Session $session,
+        TranslatorInterface $translator,
+        ContactHandler $handler
+    ) {
+        $this->templating = $templating;
         $this->session = $session;
         $this->translator = $translator;
+        $this->handler = $handler;
     }
 
     /**
      * Contact form action
+     *
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(Request $request)
     {
@@ -66,10 +82,12 @@ class ContactController extends Controller
             $hasError = true;
         }
 
-        return $this->render('AjirContactBundle:Contact:index.html.twig',
+        return $this->templating->renderResponse(
+            'AjirContactBundle:Contact:contact_form.html.twig',
             array(
                 'form' => $form->createView(),
                 'hasError' => $hasError
-            ));
+            )
+        );
     }
 }
