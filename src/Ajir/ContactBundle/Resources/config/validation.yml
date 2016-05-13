@@ -1,0 +1,7 @@
+ContactBundle\Model\Contact:
+    properties:
+        email:
+            - Email:
+                message: 'ajir_contact.email.invalid'
+                strict: false
+                checkMX: true

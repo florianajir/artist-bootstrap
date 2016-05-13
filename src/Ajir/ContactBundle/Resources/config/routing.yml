@@ -1,0 +1,5 @@
+#ajir_contact_
+
+ajir_contact_form:
+    path:     /contact
+    defaults: { _controller: ajir_contact.controller:indexAction }

@@ -1,0 +1,4 @@
+ajir_contact:
+  form:
+    error: An error has occured during message submission
+    success: Your message has been sent successfully

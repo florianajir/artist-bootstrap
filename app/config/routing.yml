@@ -1,0 +1,6 @@
+app:
+    resource: "@AppBundle/Controller/"
+    type:     annotation
+
+contact:
+    resource: '@AjirContactBundle/Resources/config/routing.yml'

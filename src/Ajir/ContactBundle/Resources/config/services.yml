@@ -1,0 +1,26 @@
+services:
+
+    ajir_contact.form:
+        class: Symfony\Component\Form\Form
+#        arguments: ['@ajir_contact.form.type']
+        arguments: ['Ajir\ContactBundle\Form\ContactType']
+        factory: ["@form.factory", create]
+
+    ajir_contact.form.type:
+        class: Ajir\ContactBundle\Form\ContactType
+        tags:
+            - { name: form.type }
+
+    ajir_contact.form.handler:
+        class: Ajir\ContactBundle\Form\ContactHandler
+        scope: request
+        arguments: 
+            - '@ajir_contact.form'
+            - '@mailer'
+
+    ajir_contact.controller:
+        class: Ajir\ContactBundle\Controller\ContactController
+        arguments:
+            - '@ajir_contact.form.handler'
+            - '@session'
+            - '@translator'
